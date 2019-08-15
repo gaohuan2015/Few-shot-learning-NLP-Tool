@@ -1,4 +1,6 @@
 import json
+import torch
+import Config
 
 
 class FewRel:
@@ -18,7 +20,9 @@ class FewRel:
             original_data = json.load(f)
             for relation in original_data:
                 sentences_number += len(original_data[relation])
+            self.words = torch.zeros(sentences_number, Config.max_length)
 
 if __name__ == "__main__":
     data = FewRel()
-    data.loadJson('train')
+    data.loadJson("train")
+
