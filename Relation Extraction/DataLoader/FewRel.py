@@ -21,6 +21,10 @@ class FewRel:
             for relation in original_data:
                 sentences_number += len(original_data[relation])
             self.words = torch.zeros(sentences_number, Config.max_length)
+            for relation in original_data:
+                for instance in original_data[relation]:
+                    words = instance['tokens']
+
 
 if __name__ == "__main__":
     data = FewRel()
