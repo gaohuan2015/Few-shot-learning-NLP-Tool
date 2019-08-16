@@ -11,6 +11,13 @@ import Config
 from tqdm import tqdm
 
 
+class Task:
+    def __init__(self, support_data, query_data, query_label):
+        self.support_data = support_data
+        self.query_data = query_data
+        self.query_label = query_label
+
+
 class InputFeature:
     def __init__(self, input_ids, input_mask, data_position1, data_position2):
         self.input_ids = input_ids
@@ -34,12 +41,19 @@ class FewRel:
 
     def build_task(self):
         target_class = random.sample(list(self.relation_features.keys()), Config.N)
+        support = []
+        query = []
+        query_label = []
         for i, classid in enumerate(target_class):
             features = np.array(self.relation_features[classid])
             scope = len(features)
             indice = np.random.randint(0, scope, Config.K + Config.Q)
             support_feature = features[indice]
-            
+            support_set, query_set = np.split(support_feature, [Config.K])
+            support = support + list(support_set)
+            query = query + list(query_set)
+            query_label = query_label + [classid] * Config.Q
+        return Task(support, query, query_label)
 
     def convert_token_to_id(self, tokens):
         inputids = []
