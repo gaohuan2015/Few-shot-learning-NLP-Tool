@@ -37,7 +37,7 @@ class FewRel:
 
     def get_train_dataloader(self):
         self.relation_features = self.convert_to_features(self.train_path)
-        self.build_task()
+        self.build_batch()
 
     def build_task(self):
         target_class = random.sample(list(self.relation_features.keys()), Config.N)
@@ -110,6 +110,12 @@ class FewRel:
                     input_features.append(input_feature)
                 relation_features[self.relation2id[relation]] = input_features
         return relation_features
+
+    def build_batch(self):
+        batch_data = []
+        for i in range(Config.Batch_size):
+            batch_data.append(self.build_task())
+        return batch_data
 
 
 if __name__ == "__main__":
